@@ -1,0 +1,60 @@
+
+body{
+	margin: 0;
+	padding: 0;
+}
+svg{
+	margin-top: 10px;
+	margin-left:10px;
+	/*border:1px solid black;*/
+}
+
+.grid line{
+	stroke-width:2px;
+	stroke: #f3f3f3;
+}
+
+.axis--x path {
+  display: none;
+}
+
+
+.axis path.domain{
+	stroke: #d3d3d3 !important;
+}
+
+.majorityline path.domain{
+	display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width:2.3px;
+  cursor: pointer;
+}
+
+
+.legend .labels{
+	font-family: sans-serif;
+	letter-spacing: 0.3px;
+}
+
+.legend .cls{
+	cursor: pointer;
+}
+
+
+#mainGraph .PASOK.party,#mainGraph .INDI.party ,#mainGraph .SYRIZA.party ,#mainGraph .ND.party,
+#mainGraph .PASOK text, #mainGraph .INDI text ,#mainGraph .SYRIZA text,#mainGraph .ND text,
+#mainGraph .PASOK circle,#mainGraph .INDI circle,#mainGraph .SYRIZA circle,#mainGraph .ND circle
+ {
+	opacity: 1;
+	pointer-events: all;
+}
+
+
+.INDI circle, .ANMP circle{
+	stroke:#000000;
+	stroke-width:0.5px;
+}
