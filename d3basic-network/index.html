@@ -32,12 +32,23 @@
 </head>
 
 <body>  
-    <input id="groupName" type="text" placeholder="Team Name" value=""/>
-    <button id="deleteBtn" onclick="removeConnection()" >DELETE</button>
+    <div class="info">
+        <input id="groupName" type="text" placeholder="Team Name" value=""/>
+        <div> Links: <span id="groupScore-links"> 0 </span></div>
+        <div> Nodes: <span id="groupScore-nodes"> 0 </span> </div>
+        <div> Interdisciplinary: <span id="groupScore-interdiscipline"> HIDDEN </span> </div>
+        <div> Total: <span id="groupScore-total"> 0 </span> </div>
+    </div>
+    <div class="tools">
+        <button id="deleteBtn" style="" onclick="removeConnection()" >DELETE</button>
+    </div>
+
 
     <div id="graph"> </div> 
-  <a href="" id="a">click here to download your file</a>
-<!-- <button onclick="download('ff', 'data.txt', 'text/plain')">Create file</button> -->
+
+
+  <a href="" id="a" target="_blank">click here to download your file</a>
+
 
 </body>
 </html>

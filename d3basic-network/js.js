@@ -16,6 +16,7 @@ var selectedLine;
 var deleteable = false;
 
 var GroupName;
+var GroupScore = 0; 
 
 $(document).ready(function(){
 
@@ -40,6 +41,10 @@ $(document).ready(function(){
 	});
   
 function organiseData(){
+
+  data = data.filter(function(d){
+     return (d.Type == 'concept')
+  })
 
 }
 
@@ -169,10 +174,24 @@ function saveConnection() {
 
   var a = { "source":selected[0].datum()["id"] , "target":selected[1].datum()["id"] , "value": 0 }
   if( getIndexofLinks(a) == -1 ) {
-    links.push(a)
+    links.push(a);
+    updateScore(a);
     download('t', 'data_'+ GroupName +'_'+(new Date).getTime()+'.txt', 'text/plain');
   }
 }
+
+function updateScore(newLink){
+  groupScore = links.length;
+  d3.select('#groupScore-links').html(groupScore)
+
+  // groupdScore-diverse = checkEmptyNodes(newLink);
+  groupdScoreDiverse = 20;
+  d3.select('#groupScore-nodes').html(groupdScoreDiverse)
+
+  // groupdScore-interdiscipline = checkInterdisciplinaryNodes(newLink);
+
+}
+
 
 function download(text, name, type) {
   var a = document.getElementById("a");
@@ -212,7 +231,6 @@ function getIndexofLinks(z){
       selectedLine.remove();
     }
   }
-
 
 
 // http://bl.ocks.org/mbostock/7555321
