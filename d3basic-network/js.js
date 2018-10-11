@@ -15,6 +15,8 @@ var links = [];
 var selectedLine;
 var deleteable = false;
 
+var GroupName;
+
 $(document).ready(function(){
 
 	svg = d3.select("#graph").append("svg")
@@ -26,9 +28,8 @@ $(document).ready(function(){
   svg.append('g').attr('class','links')
   svg.append('g').attr('class','nodes')
 
-	// d3.json("data.json", function(dataIn, err) {
+	 // d3.json("data.json", function(dataIn, err) {
 	  data = dataIN;
-
 
 	  //Organise data function
 	  organiseData();
@@ -164,21 +165,33 @@ function makeConnection(p) {
 }
 
 function saveConnection() {
-  var a = { "source":selected[0].datum()["id"] , "target":selected[1].datum()["id"] , "value": 0 }
+  GroupName = d3.select('input#groupName').property('value');
 
+  var a = { "source":selected[0].datum()["id"] , "target":selected[1].datum()["id"] , "value": 0 }
   if( getIndexofLinks(a) == -1 ) {
     links.push(a)
+    download('t', 'data_'+ GroupName +'_'+(new Date).getTime()+'.txt', 'text/plain');
   }
 }
-  
+
+function download(text, name, type) {
+  var a = document.getElementById("a");
+  tt = JSON.stringify(links)
+  var file = new Blob([tt], {type: type});
+  a.href = URL.createObjectURL(file);
+  a.download = name;
+}
+
 function deleteConnection(b) {
-  
+
   toDel = getIndexofLinks(b.datum()); 
   if( toDel > 0 ) {
     links.splice(toDel, 1);
   }
 
 }
+
+
 
 
 function getIndexofLinks(z){
