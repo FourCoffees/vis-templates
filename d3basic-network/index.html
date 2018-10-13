@@ -27,22 +27,25 @@
     
         <!-- Custom -->
     <script src="js.js"></script>
-    
 
 </head>
 
 <body>  
     <div class="info">
-        <input id="groupName" type="text" placeholder="Team Name" value=""/>
-        <div> Links: <span id="groupScore-links"> 0 </span></div>
-        <div> Nodes: <span id="groupScore-nodes"> 0 </span> </div>
-        <div> Interdisciplinary: <span id="groupScore-interdiscipline"> HIDDEN </span> </div>
-        <div> Total: <span id="groupScore-total"> 0 </span> </div>
-    </div>
-    <div class="tools">
-        <button id="deleteBtn" style="" onclick="removeConnection()" >DELETE</button>
-    </div>
+        <div class="nameContainer"> <input id="groupName" type="text" placeholder="Team Name" value=""/> </div>
+        <div class="scoringContainer">
+            <div> Links: <span id="groupScore-links"> 0 </span></div>
+            <div> Nodes: <span id="groupScore-nodes"> 0 </span> </div>
+            <div> Interdisciplinary: <span id="groupScore-interdiscipline"> HIDDEN </span> </div>
+            <div> Total: <span id="groupScore-total"> 0 </span> </div>
+        </div>
 
+        <div class="tools">
+            <button id="deleteBtn"  onclick="removeConnection()" >DELETE</button>
+            <div class="msg"></div>
+        </div>
+    </div>
+ 
 
     <div id="graph"> </div> 
 

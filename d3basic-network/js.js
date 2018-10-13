@@ -18,11 +18,9 @@ var deleteable = false;
 var GroupName;
 var GroupScore = 0; 
 
-
 // GRID
 var  dd = d3.scaleLinear().domain([1,9]).range([0 , width])
 var  ee = d3.scaleLinear().domain([1,8]).range([margin.top , height + margin.top + margin.bottom])
-
 
 
 $(document).ready(function(){
@@ -231,10 +229,14 @@ function makeConnection(p) {
           d3.select(this).attr('stroke','#0022ff')
           selectedLine = d3.select(this);
           deleteable = true;
+          d3.select('#deleteBtn').classed('show',true)
+
         }else{
           d3.select(this).attr('stroke','#000')
           selectedLine = null;
           deleteable = false;                
+          d3.select('#deleteBtn').classed('show',false)
+
         }
       })
 }
@@ -274,9 +276,9 @@ function download(text, name, type) {
 function deleteConnection(b) {
 
   toDel = getIndexofLinks(b.datum()); 
-  if( toDel > 0 ) {
+  if( toDel >= 0 ) {
     links.splice(toDel, 1);
-    // updateScore(a);
+    updateScore();
     download('t', 'data_'+ GroupName +'_'+(new Date).getTime()+'.txt', 'text/plain');
 
   }
@@ -294,12 +296,20 @@ function getIndexofLinks(z){
     return indx;
 }
 
-  function removeConnection() {
-    if( deleteable == true ){
-      deleteConnection(selectedLine);
-      selectedLine.remove();
-    }
-  }
+function removeConnection() {
+if( deleteable == true ){
+  deleteConnection(selectedLine);
+  selectedLine.remove();
+
+  d3.select('#deleteBtn').classed('show',false)
+  d3.select('.info .msg').html('Link Deleted..')
+  d3.select('.info .msg').classed('sendMsg', true)
+
+  setTimeout( function(){
+          d3.select('.info .msg').classed('sendMsg', false);
+  }, 1200)
+}
+}
 
 
 // http://bl.ocks.org/mbostock/7555321
