@@ -18,6 +18,13 @@ var deleteable = false;
 var GroupName;
 var GroupScore = 0; 
 
+
+// GRID
+var  dd = d3.scaleLinear().domain([1,9]).range([0 , width])
+var  ee = d3.scaleLinear().domain([1,8]).range([margin.top , height + margin.top + margin.bottom])
+
+
+
 $(document).ready(function(){
 
 	svg = d3.select("#graph").append("svg")
@@ -50,49 +57,36 @@ function organiseData(){
 
 function makeVis() {
 
-  dd = d3.scaleLinear().domain([0 , 1]).range([margin.left , width])
-  ee = d3.scaleLinear().domain([0 , 1]).range([margin.top , height])
-
   nodes = svg.select('.nodes').selectAll('.concept')
         .data(data)
         .enter().append('g')
         .attr('class','concept')
-  nodes.append('rect')
-        .attr('width', 90).attr('height', 40)
-        .attr('x', function() { return dd( Math.random() ); })
-        .attr('y',  function() { return ee( Math.random() ); })
-        .attr('fill','#fff')
-        .attr('stroke', function(d){
-          if( d.Type == 'data' ){ return 'green'; }
-          else{ return '#aaa'}
-        })
-        .attr('id', 'id0');
+
+  drawHex(nodes);
   nodes.append('text').text(function(d){ return d.id})
         .attr('transform', function(){
-          rectSib = d3.select(this.parentNode).select('rect');
-          x = parseInt( rectSib.attr('x') ) + 45;
-          y = parseInt( rectSib.attr('y') ) + 22;
-          return 'translate('+ x +','+ y +')';
+          rectSib = d3.select(this.parentNode).select('path').attr('transform');
+          return rectSib;
         })
         .attr('text-anchor', 'middle')
         .attr('fill', function(d){
         })
-        .call(wrap,80)
+        .call(wrap,70)
 
 
   d3.selectAll('.concept')
     .on('mouseup', function(d) {
+      console.log('yes')
          if( selectedCnt == 0) {
-              selected[0] = d3.select(this).select('rect');
+              selected[0] = d3.select(this).select('path');
               selected[0].attr('fill', '#0022ff')
               selectedCnt = 1;
             }else if( selectedCnt == 1) {
-              selected[1] = d3.select(this).select('rect');
+              selected[1] = d3.select(this).select('path');
               selected[1].attr('fill', '#0022ff')
 
               // check if link already exists
               p = { "source": selected[0].datum()["id"] , "target": selected[1].datum()["id"] , 'value': 0};
-              console.log(getIndexofLinks(p))
 
               if ( getIndexofLinks(p) == -1 ) {
                 makeConnection(p);
@@ -148,12 +142,52 @@ function makeVis() {
 }
 
 
+ function drawHex(nodes) {
+
+  var h = (Math.sqrt(3)/2),
+    radius = 35,
+    xp =  0,
+    yp =  0,
+    hexagonData = [
+      { "x": radius+xp,   "y": yp}, 
+      { "x": radius/2+xp,  "y": radius*h+yp},
+      { "x": -radius/2+xp,  "y": radius*h+yp},
+      { "x": -radius+xp,  "y": yp},
+      { "x": -radius/2+xp,  "y": -radius*h+yp},
+      { "x": radius/2+xp, "y": -radius*h+yp}
+    ];
+
+drawHexagon = 
+  d3.line().x(function(d) { return d.x; })
+          .y(function(d) { return d.y; })
+          .curve( d3.curveLinearClosed )
+
+  nodes.append('path')
+        .attr("d", drawHexagon(hexagonData))
+        .attr('fill','#fff')
+        .attr('transform', function(d,i){ 
+          jitX = jitter();
+          jitY = jitter();
+          d['jitt'] = { "jitX": jitX, "jitY": jitY };
+          return 'translate('+ (dd(d.pos_x) + jitX )+','+ (ee(d.pos_y) + jitY)+')' })
+        .attr('stroke', function(d){
+          if( d.Type == 'data' ){ return 'green'; }
+          else{ return '#aaa'}
+        })
+ }
+
+
+function jitter(){
+  return Math.random()*25;
+}
+
+
 function makeConnection(p) {
   svg.select('g.links').append('line')
-      .attr('x1', parseInt(selected[0].attr('x')) + 30)
-      .attr('y1', parseInt(selected[0].attr('y')) + 15)
-      .attr('x2', parseInt(selected[1].attr('x')) + 30)
-      .attr('y2', parseInt(selected[1].attr('y')) + 15)
+      .attr('x1', dd(selected[0].datum()['pos_x']) + selected[0].datum()['jitt'].jitX)
+      .attr('y1', ee(selected[0].datum()['pos_y']) + selected[0].datum()['jitt'].jitY)
+      .attr('x2', dd(selected[1].datum()['pos_x']) + selected[1].datum()['jitt'].jitX)
+      .attr('y2', ee(selected[1].datum()['pos_y']) + selected[1].datum()['jitt'].jitY)
       .attr('stroke','#000').attr('stroke-width',3.5)
       .datum(p)
       .on('mouseup', function(){
@@ -206,12 +240,11 @@ function deleteConnection(b) {
   toDel = getIndexofLinks(b.datum()); 
   if( toDel > 0 ) {
     links.splice(toDel, 1);
+    // updateScore(a);
+    download('t', 'data_'+ GroupName +'_'+(new Date).getTime()+'.txt', 'text/plain');
+
   }
-
 }
-
-
-
 
 function getIndexofLinks(z){
   indx = -1; 
