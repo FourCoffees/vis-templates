@@ -70,20 +70,25 @@ function makeVis() {
         })
         .attr('text-anchor', 'middle')
         .attr('fill', function(d){
+          if( d.oblig == 'TRUE' ){ return "#fff"; }
+          else if( d.level == 1 ){ return "#fff"; }
+          else { return '#082b1a' }
         })
         .call(wrap,70)
 
 
   d3.selectAll('.concept')
     .on('mouseup', function(d) {
-      console.log('yes')
          if( selectedCnt == 0) {
               selected[0] = d3.select(this).select('path');
-              selected[0].attr('fill', '#0022ff')
+              selected[0].attr('fill', hexColorHighLight() )
+              d3.select(this).select('text').attr('fill', textColorHighLight() );
+
               selectedCnt = 1;
             }else if( selectedCnt == 1) {
               selected[1] = d3.select(this).select('path');
-              selected[1].attr('fill', '#0022ff')
+              selected[1].attr('fill', hexColorHighLight() )
+              d3.select(this).select('text').attr('fill', textColorHighLight() );
 
               // check if link already exists
               p = { "source": selected[0].datum()["id"] , "target": selected[1].datum()["id"] , 'value': 0};
@@ -95,8 +100,12 @@ function makeVis() {
               
               setTimeout( function(){ 
                 selectedCnt = 0;                
-                selected[0].attr('fill', '#fff');
-                selected[1].attr('fill', '#fff');
+                selected[0].attr('fill', function(d){ return hexColor(d); });
+                selected[1].attr('fill', function(d){ return hexColor(d); });
+                  
+                d3.select(selected[1].node().parentNode).select('text').attr('fill', function(d){ return textColor(d);})
+                d3.select(selected[0].node().parentNode).select('text').attr('fill', function(d){ return textColor(d);})
+              
               },600);
           } 
     })
@@ -142,10 +151,32 @@ function makeVis() {
 }
 
 
+function textColorHighLight(){
+  return '#fff';
+}
+
+function hexColorHighLight(){
+  return '#0022ff';
+}
+
+
+function textColor(d){
+  if( d.oblig == 'TRUE' ){ return "#fff"; }
+  else if( d.level == 1 ){ return "#fff"; }
+  else { return '#082b1a' }
+}
+
+function hexColor(d){
+  if( d.oblig == 'TRUE' ){ return "rgba(252,179,26,0.9)"; }
+  else if( d.level == 1 ){ return "#082b1a"; }
+  else { return '#fff' }
+ }
+
+
  function drawHex(nodes) {
 
   var h = (Math.sqrt(3)/2),
-    radius = 35,
+    radius = 40,
     xp =  0,
     yp =  0,
     hexagonData = [
@@ -164,12 +195,17 @@ drawHexagon =
 
   nodes.append('path')
         .attr("d", drawHexagon(hexagonData))
-        .attr('fill','#fff')
         .attr('transform', function(d,i){ 
           jitX = jitter();
           jitY = jitter();
           d['jitt'] = { "jitX": jitX, "jitY": jitY };
-          return 'translate('+ (dd(d.pos_x) + jitX )+','+ (ee(d.pos_y) + jitY)+')' })
+          return 'translate('+ (dd(d.pos_x) + jitX )+','+ (ee(d.pos_y) + jitY)+')' 
+        })
+        .attr('fill', function(d){ 
+          if( d.oblig == 'TRUE' ){ return "rgba(252,179,26,0.9"; }
+          else if( d.level == 1 ){ return "#082b1a"; }
+          else { return '#fff' }
+        })
         .attr('stroke', function(d){
           if( d.Type == 'data' ){ return 'green'; }
           else{ return '#aaa'}
@@ -178,7 +214,7 @@ drawHexagon =
 
 
 function jitter(){
-  return Math.random()*25;
+  return Math.random()*20;
 }
 
 
