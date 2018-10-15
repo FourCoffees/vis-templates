@@ -129,7 +129,6 @@ function makeConnection(p) {
           selectedLine = null;
           deleteable = false;                
           d3.select('#deleteBtn').classed('show',false)
-
         }
       })
 }
@@ -217,7 +216,6 @@ function deleteConnection(b) {
 
 function getIndexofLinks(z){
   indx = -1; 
-  console.log(z)
   links.forEach( function(tt, index) {
     if( tt.source == z.source && tt.target == z.target
       || tt.target == z.source && tt.source == z.target ) {

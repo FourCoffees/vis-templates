@@ -41,6 +41,13 @@ svg{
  letter-spacing: 0.5px;
 }
 
+.download{
+  margin-left: 4em;
+  padding: 1em;
+  background-color: black;
+  color: white;
+}
+
 
 .totalScore{
  /*width: 100%;*/
