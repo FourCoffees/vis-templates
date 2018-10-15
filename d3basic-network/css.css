@@ -42,6 +42,14 @@ svg{
 }
 
 
+.totalScore{
+ /*width: 100%;*/
+ /*min-width: 50px;*/
+ padding: 0 1em 0 2em;
+ font-weight: bold;
+ font-size: 20px;
+}
+
 .tools{
  float: right;
 }

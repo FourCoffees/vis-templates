@@ -17,6 +17,7 @@ var deleteable = false;
 
 var GroupName;
 var GroupScore = 0; 
+var groupdScoreDiverse = 0;
 
 // GRID
 var  dd = d3.scaleLinear().domain([1,9]).range([0 , width])
@@ -50,7 +51,9 @@ function organiseData(){
   data = data.filter(function(d){
      return (d.Type == 'concept')
   })
-
+  data.forEach(function(k,i){
+    k['connectedLinksCnt'] = 0
+  });
 }
 
 function makeVis() {
@@ -67,11 +70,7 @@ function makeVis() {
           return rectSib;
         })
         .attr('text-anchor', 'middle')
-        .attr('fill', function(d){
-          if( d.oblig == 'TRUE' ){ return "#fff"; }
-          else if( d.level == 1 ){ return "#fff"; }
-          else { return '#082b1a' }
-        })
+        .attr('fill', function(d){ return textColor(d); })
         .call(wrap,70)
 
 
@@ -92,6 +91,8 @@ function makeVis() {
               p = { "source": selected[0].datum()["id"] , "target": selected[1].datum()["id"] , 'value': 0};
 
               if ( getIndexofLinks(p) == -1 ) {
+                selected[0].datum()['connectedLinksCnt']++;
+                selected[1].datum()['connectedLinksCnt']++;
                 makeConnection(p);
                 saveConnection();
               }
@@ -107,113 +108,9 @@ function makeVis() {
               },600);
           } 
     })
-    // .call(d3.drag().on("drag", function dragged(d) {
-    //                   d3.select(this).attr("x", d.x = d3.event.x - 30)
-    //                         .attr("y", d.y = d3.event.y - 15);
-    //                 })
-    //                .on('start', function(d){ 
-    //                  if( selectedCnt == 0) {
-    //                     selected[0] = d3.select(this);
-    //                     selected[0].attr('fill', '#0022ff')
-    //                  }else if( selectedCnt == 1) {
-    //                     selected[1] = d3.select(this);
-    //                     selected[1].attr('fill', '#0022ff')
-    //                   }
-    //                })
-    //                .on('end', function(d){
-    //                  if( selectedCnt == 0) {
-    //                       selected[0] = d3.select(this);
-    //                       // selected[0].attr('fill', '#0022ff')
-    //                       selectedCnt = 1;
-    //                     }else if( selectedCnt == 1) {
-    //                       selected[1] = d3.select(this);
-    //                       // selected[1].attr('fill', '#0022ff')
-
-    //                       // check if link already exists
-    //                       p = { "source": selected[0].datum()["id"] , "target": selected[1].datum()["id"] , 'value': 0};
-    //                       console.log(getIndexofLinks(p))
-
-    //                       if ( getIndexofLinks(p) == -1 ) {
-    //                         makeConnection(p);
-    //                         saveConnection();
-    //                       }
-                          
-    //                       setTimeout( function(){ 
-    //                         selectedCnt = 0;                
-    //                         selected[0].attr('fill', '#fff');
-    //                         selected[1].attr('fill', '#fff');
-    //                       },600);
-    //                   }
-    //                })
-    //               );
+   
 }
 
-
-function textColorHighLight(){
-  return '#fff';
-}
-
-function hexColorHighLight(){
-  return '#0022ff';
-}
-
-
-function textColor(d){
-  if( d.oblig == 'TRUE' ){ return "#fff"; }
-  else if( d.level == 1 ){ return "#fff"; }
-  else { return '#082b1a' }
-}
-
-function hexColor(d){
-  if( d.oblig == 'TRUE' ){ return "rgba(252,179,26,0.9)"; }
-  else if( d.level == 1 ){ return "#082b1a"; }
-  else { return '#fff' }
- }
-
-
- function drawHex(nodes) {
-
-  var h = (Math.sqrt(3)/2),
-    radius = 40,
-    xp =  0,
-    yp =  0,
-    hexagonData = [
-      { "x": radius+xp,   "y": yp}, 
-      { "x": radius/2+xp,  "y": radius*h+yp},
-      { "x": -radius/2+xp,  "y": radius*h+yp},
-      { "x": -radius+xp,  "y": yp},
-      { "x": -radius/2+xp,  "y": -radius*h+yp},
-      { "x": radius/2+xp, "y": -radius*h+yp}
-    ];
-
-drawHexagon = 
-  d3.line().x(function(d) { return d.x; })
-          .y(function(d) { return d.y; })
-          .curve( d3.curveLinearClosed )
-
-  nodes.append('path')
-        .attr("d", drawHexagon(hexagonData))
-        .attr('transform', function(d,i){ 
-          jitX = jitter();
-          jitY = jitter();
-          d['jitt'] = { "jitX": jitX, "jitY": jitY };
-          return 'translate('+ (dd(d.pos_x) + jitX )+','+ (ee(d.pos_y) + jitY)+')' 
-        })
-        .attr('fill', function(d){ 
-          if( d.oblig == 'TRUE' ){ return "rgba(252,179,26,0.9"; }
-          else if( d.level == 1 ){ return "#082b1a"; }
-          else { return '#fff' }
-        })
-        .attr('stroke', function(d){
-          if( d.Type == 'data' ){ return 'green'; }
-          else{ return '#aaa'}
-        })
- }
-
-
-function jitter(){
-  return Math.random()*20;
-}
 
 
 function makeConnection(p) {
@@ -245,23 +142,52 @@ function saveConnection() {
   GroupName = d3.select('input#groupName').property('value');
 
   var a = { "source":selected[0].datum()["id"] , "target":selected[1].datum()["id"] , "value": 0 }
+  var nod = { "source":selected[0] , "target":selected[1] }
+
+ 
   if( getIndexofLinks(a) == -1 ) {
     links.push(a);
-    updateScore(a);
+    updateScore(nod);
     download('t', 'data_'+ GroupName +'_'+(new Date).getTime()+'.txt', 'text/plain');
   }
 }
 
-function updateScore(newLink){
+// when delete and crossing over the treshhold some points get lost
+function updateScore(newLink, removePoints ){
   groupScore = links.length;
   d3.select('#groupScore-links').html(groupScore)
 
-  // groupdScore-diverse = checkEmptyNodes(newLink);
-  groupdScoreDiverse = 20;
+  if( removePoints != true){
+    groupdScoreDiverse += scoreNodeConnectivty(newLink.source.datum()) +  scoreNodeConnectivty(newLink.target.datum());
+  }else{
+    groupdScoreDiverse -= scoreNodeConnectivty(newLink.source.datum()) +  scoreNodeConnectivty(newLink.target.datum());
+  }
   d3.select('#groupScore-nodes').html(groupdScoreDiverse)
 
   // groupdScore-interdiscipline = checkInterdisciplinaryNodes(newLink);
+  d3.select('#groupScore-total').html('Points: '+  (groupdScoreDiverse + groupScore ) )
 
+}
+
+
+/*
+Max connectivity: 27 is all nodes count - or 16 in more relative terms
+If the node is already traversed 
+13-16 1 pnts  0.5
+10-12   1 pnts  1 
+5-9     4 pnts  4
+0-5     5 pnts   7.5
+*/
+function scoreNodeConnectivty(a) {
+  if( a['connectedLinksCnt'] < 3){
+    return 5;
+  }else if( a['connectedLinksCnt'] < 9) {
+    return 4;
+  }else if( a['connectedLinksCnt'] < 13 ) {
+    return 1.5;
+  }else if( a['connectedLinksCnt'] ) {
+    return 1;
+  }
 }
 
 
@@ -278,7 +204,18 @@ function deleteConnection(b) {
   toDel = getIndexofLinks(b.datum()); 
   if( toDel >= 0 ) {
     links.splice(toDel, 1);
-    updateScore();
+
+    source = d3.select('.nodes').selectAll('.concept').filter( function(d) {
+      return d.id == b.datum()['source']
+    })
+    source.datum()['connectedLinksCnt']--;
+
+    target = d3.select('.nodes').selectAll('.concept').filter( function(d) {
+      return d.id == b.datum()['target']
+    })
+    target.datum()['connectedLinksCnt']--;
+
+    updateScore({'source': source, "target": target}, true );
     download('t', 'data_'+ GroupName +'_'+(new Date).getTime()+'.txt', 'text/plain');
 
   }
@@ -306,9 +243,75 @@ if( deleteable == true ){
   d3.select('.info .msg').classed('sendMsg', true)
 
   setTimeout( function(){
-          d3.select('.info .msg').classed('sendMsg', false);
+    d3.select('.info .msg').classed('sendMsg', false);
   }, 1200)
 }
+}
+
+function textColorHighLight(){
+  return '#fff';
+}
+
+function hexColorHighLight(){
+  return '#0022ff';
+}
+
+
+function textColor(d){
+  if( d.oblig == 'TRUE' ){ return "#fff"; }
+  else if( d.level == 1 ){ return "#fff"; }
+  else { return '#082b1a' }
+}
+
+function hexColor(d){
+  if( d.oblig == 'TRUE' ){ return "rgba(252,179,26,0.9)"; }
+  else if( d.level == 1 ){ return "#082b1a"; }
+  else { return '#fff' }
+ }
+
+
+function drawHex(nodes) {
+
+  var h = (Math.sqrt(3)/2),
+    radius = 40,
+    xp =  0,
+    yp =  0,
+    hexagonData = [
+      { "x": radius+xp,   "y": yp}, 
+      { "x": radius/2+xp,  "y": radius*h+yp},
+      { "x": -radius/2+xp,  "y": radius*h+yp},
+      { "x": -radius+xp,  "y": yp},
+      { "x": -radius/2+xp,  "y": -radius*h+yp},
+      { "x": radius/2+xp, "y": -radius*h+yp}
+    ];
+
+  drawHexagon = 
+  d3.line().x(function(d) { return d.x; })
+          .y(function(d) { return d.y; })
+          .curve( d3.curveLinearClosed )
+
+  nodes.append('path')
+        .attr("d", drawHexagon(hexagonData))
+        .attr('transform', function(d,i){ 
+          jitX = jitter();
+          jitY = jitter();
+          d['jitt'] = { "jitX": jitX, "jitY": jitY };
+          return 'translate('+ (dd(d.pos_x) + jitX )+','+ (ee(d.pos_y) + jitY)+')' 
+        })
+        .attr('fill', function(d){ 
+          if( d.oblig == 'TRUE' ){ return "rgba(252,179,26,0.9"; }
+          else if( d.level == 1 ){ return "#082b1a"; }
+          else { return '#fff' }
+        })
+        .attr('stroke', function(d){
+          if( d.Type == 'data' ){ return 'green'; }
+          else{ return '#aaa'}
+        })
+}
+
+
+function jitter(){
+  return Math.random()*20;
 }
 
 
