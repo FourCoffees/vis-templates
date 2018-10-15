@@ -23,7 +23,6 @@ var groupdScoreDiverse = 0;
 var  dd = d3.scaleLinear().domain([1,9]).range([0 , width])
 var  ee = d3.scaleLinear().domain([1,8]).range([margin.top , height + margin.top + margin.bottom])
 
-
 $(document).ready(function(){
 
 	svg = d3.select("#graph").append("svg")
@@ -105,13 +104,10 @@ function makeVis() {
                 d3.select(selected[1].node().parentNode).select('text').attr('fill', function(d){ return textColor(d);})
                 d3.select(selected[0].node().parentNode).select('text').attr('fill', function(d){ return textColor(d);})
               
-              },600);
+              },500);
           } 
-    })
-   
+    })  
 }
-
-
 
 function makeConnection(p) {
   svg.select('g.links').append('line')
@@ -166,9 +162,7 @@ function updateScore(newLink, removePoints ){
 
   // groupdScore-interdiscipline = checkInterdisciplinaryNodes(newLink);
   d3.select('#groupScore-total').html('Points: '+  (groupdScoreDiverse + groupScore ) )
-
 }
-
 
 /*
 Max connectivity: 27 is all nodes count - or 16 in more relative terms
