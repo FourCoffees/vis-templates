@@ -160,7 +160,7 @@ function updateScore(newLink, removePoints ){
   d3.select('#groupScore-nodes').html(groupdScoreDiverse)
 
   // groupdScore-interdiscipline = checkInterdisciplinaryNodes(newLink);
-  d3.select('#groupScore-total').html('Points: '+  (groupdScoreDiverse + groupScore ) )
+  d3.select('#groupScore-total').html((groupdScoreDiverse + groupScore ) )
 }
 
 /*
@@ -186,7 +186,15 @@ function scoreNodeConnectivty(a) {
 
 function download(text, name, type) {
   var a = document.getElementById("a");
-  tt = JSON.stringify(links)
+
+  obj = { 'name': GroupName,
+          'score': d3.select('#groupScore-total').html(),
+          'timestamp': (new Date).getTime(),
+          'links': links, 
+        }
+
+  tt = JSON.stringify(obj)
+
   var file = new Blob([tt], {type: type});
   a.href = URL.createObjectURL(file);
   a.download = name;
