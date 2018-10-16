@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Meta stuff -->
+    <meta charset="UTF-8">
+    <meta name="description" content="GENERAL DESCRIPTION">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Social Meta stuff -->
+    <meta property="og:title" content="SOCIAL TITLE">
+    <meta property="og:image" content="SOCIAL IMAGE">
+    <meta property="og:description" content="SOCIAL DESCRIPTION">
+
+
+    <title>A Game of Change</title>
+    <script src="datafile.js"></script>
+
+    <!-- Styles -->
+    <link href="css.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <!-- JS -->
+    <!-- Hosted Libs -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <!-- Custom -->
+    <script src="js.js"></script>
+
+</head>
+
+<body>  
+    <div class="info">
+        <div class="nameContainer"> <input id="groupName" type="text" placeholder="Team Name" value=""/> </div>
+        <div class="totalScore">Points: <span id="groupScore-total"> 0 </span> </div>
+        <div class="scoringContainer">
+            <div> Total Links #: <span id="groupScore-links"> 0 </span></div>
+            <br><div> Latest Link Value: <span id="groupScore-nodes"> 0 </span> </div>
+            <!-- <div> Interdisciplinary: <span id="groupScore-interdiscipline"> HIDDEN </span> </div> -->
+        </div>
+        
+        <a href="" id="a" target="_blank" class="download">Download your file!</a>
+
+        <div class="tools">
+            <button id="deleteBtn"  onclick="removeConnection()" >DELETE</button>
+            <div class="msg"></div>
+        </div>
+    </div>
+ 
+
+    <div id="graph"> </div> 
+
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+
+body{
+	margin: 0;
+	padding: 0;
+}
+svg{
+	margin-top: 10px;
+	margin-left:10px;
+	border:1px solid black;
+}
+
+.info{
+ width: 100%;
+}
+
+.info div{
+  display: inline-block;
+}
+
+.nameContainer input{
+ /*height: 50px;*/
+ font-size: 25px;
+ padding: 0.25em;
+ color: #e54f5e;
+ letter-spacing: 1px;
+
+ border: 1px solid #eee;
+}
+
+.scoringContainer{
+ border: 1px solid #eee;
+ padding: 0.25em;
+ font-size: 15px;
+ vertical-align: top;
+ height: 50px;
+}
+
+
+.concept text{
+ font-size: 10px;
+ letter-spacing: 0.5px;
+}
+
+.download{
+  margin-left: 4em;
+  padding: 1em;
+  background-color: black;
+  color: white;
+}
+
+.totalScore{
+ /*width: 100%;*/
+ /*min-width: 50px;*/
+ padding: 0 1em 0 2em;
+ font-weight: bold;
+ font-size: 20px;
+}
+
+.tools{
+ float: right;
+}
+
+.tools #deleteBtn {
+ visibility: hidden;
+ border: 1px solid #999;
+ margin-right: 1em;
+ margin-top: 0.25em;
+}
+
+.tools .msg{
+
+ font-style: italic;
+ color: cadetblue;
+ padding-right: 0.25em;
+
+ opacity: 0;
+     transition: opacity 0.5s;
+     -webkit-transition: opacity 0.5s ease-in-out;
+       -moz-transition: opacity 0.5s ease-in-out;
+         -o-transition: opacity 0.5s ease-in-out;
+}
+
+.tools .msg.sendMsg{
+   opacity: 1;
+}
+
+.tools #deleteBtn.show{
+ visibility: visible;
+}
