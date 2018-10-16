@@ -311,7 +311,7 @@ function drawHex(nodes) {
 
 
 function jitter(){
-  return Math.random()*20;
+  return Math.random()*17;
 }
 
 
