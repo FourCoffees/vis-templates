@@ -2,7 +2,7 @@
 var margin = {top: 20, right: 100, bottom: 50, left: 100};
 
 var width = $(window).width() - margin.left - margin.right - 30,
-    height =  $(window).height() - 2*margin.top - 2*margin.bottom ;
+    height =  $(window).height() - 2*margin.top - 2*margin.bottom - 20;
 
 var svg;
 var data;
@@ -21,7 +21,7 @@ var groupdScoreDiverse = 0;
 
 // GRID
 var  dd = d3.scaleLinear().domain([1,9]).range([0 , width])
-var  ee = d3.scaleLinear().domain([1,8]).range([margin.top , height + margin.top + margin.bottom])
+var  ee = d3.scaleLinear().domain([1,8]).range([margin.top , height + margin.top + margin.bottom + 20])
 
 $(document).ready(function(){
 
