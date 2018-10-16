@@ -375,7 +375,7 @@ function drawCircl(evnts) {
     .attr('r', 51)
     .attr('transform', function(d,i){ 
       jitX = 0 ;
-      jitY = 10;
+      jitY = 15;
       d['jitt'] = { "jitX": jitX, "jitY": jitY };
       return 'translate('+ (dd(d.pos_x-0.3) + jitX )+','+ (ee(d.pos_y) + jitY)+')' 
     })
