@@ -1,4 +1,7 @@
 
+// red costs more
+// black costs less. 
+
 var margin = {top: 20, right: 100, bottom: 50, left: 100};
 
 var width = $(window).width() - margin.left - margin.right - 30,
@@ -138,7 +141,6 @@ function saveConnection() {
 
   var a = { "source":selected[0].datum()["id"] , "target":selected[1].datum()["id"] , "value": 0 }
   var nod = { "source":selected[0] , "target":selected[1] }
-
  
   if( getIndexofLinks(a) == -1 ) {
     links.push(a);
@@ -150,39 +152,58 @@ function saveConnection() {
 // when delete and crossing over the treshhold some points get lost
 function updateScore(newLink, removePoints ){
   groupScore = links.length;
-  d3.select('#groupScore-links').html(groupScore)
+  d3.select('#groupScore-links').html( groupScore)
 
   if( removePoints != true){
     groupdScoreDiverse += scoreNodeConnectivty(newLink.source.datum()) +  scoreNodeConnectivty(newLink.target.datum());
   }else{
     groupdScoreDiverse -= scoreNodeConnectivty(newLink.source.datum()) +  scoreNodeConnectivty(newLink.target.datum());
   }
-  d3.select('#groupScore-nodes').html(groupdScoreDiverse)
+  d3.select('#groupScore-nodes').html(scoreNodeConnectivty(newLink.source.datum()) +  scoreNodeConnectivty(newLink.target.datum()))
 
   // groupdScore-interdiscipline = checkInterdisciplinaryNodes(newLink);
   d3.select('#groupScore-total').html((groupdScoreDiverse + groupScore ) )
 }
 
-/*
-Max connectivity: 27 is all nodes count - or 16 in more relative terms
-If the node is already traversed 
-13-16 1 pnts  0.5
-10-12   1 pnts  1 
-5-9     4 pnts  4
-0-5     5 pnts   7.5
-*/
+/* Max connectivity: 27 is all nodes count - or 16 in more relative terms
+  If the node is already traversed 
+  13-16 1 pnts  0.5
+  10-12   1 pnts  1 
+  5-9     4 pnts  4
+  0-5     5 pnts   7.5 */
 function scoreNodeConnectivty(a) {
-  if( a['connectedLinksCnt'] < 3){
-    return 5;
-  }else if( a['connectedLinksCnt'] < 9) {
-    return 4;
-  }else if( a['connectedLinksCnt'] < 13 ) {
-    return 1.5;
-  }else if( a['connectedLinksCnt'] ) {
-    return 1;
+  if ( a['level'] == 1 ){
+    if( a['connectedLinksCnt'] < 3 ){
+      return 2;
+    }else if( a['connectedLinksCnt'] < 8 ) {
+      return 1;
+    }else if( a['connectedLinksCnt'] < 13 ) {
+      return 1;
+    }else if( a['connectedLinksCnt'] ) {
+      return 0;
+    }
+  } else if(  a['oblig'] == 'TRUE' ){
+    if( a['connectedLinksCnt'] < 3 ){
+      return 5;
+    }else if( a['connectedLinksCnt'] < 8 ) {
+      return 4;
+    }else if( a['connectedLinksCnt'] < 13 ) {
+      return 1.5;
+    }else if( a['connectedLinksCnt'] ) {
+      return 1;
+    }
+  } else{
+    if( a['connectedLinksCnt'] < 3 ){
+      return 4;
+    }else if( a['connectedLinksCnt'] < 8  ) {
+      return 3;
+    }else if( a['connectedLinksCnt'] < 13 ) {
+      return 1.5;
+    }else if( a['connectedLinksCnt'] ) {
+      return 1;
+    }
   }
 }
-
 
 function download(text, name, type) {
   var a = document.getElementById("a");
@@ -234,18 +255,18 @@ function getIndexofLinks(z){
 }
 
 function removeConnection() {
-if( deleteable == true ){
-  deleteConnection(selectedLine);
-  selectedLine.remove();
+  if( deleteable == true ){
+    deleteConnection(selectedLine);
+    selectedLine.remove();
 
-  d3.select('#deleteBtn').classed('show',false)
-  d3.select('.info .msg').html('Link Deleted..')
-  d3.select('.info .msg').classed('sendMsg', true)
+    d3.select('#deleteBtn').classed('show',false)
+    d3.select('.info .msg').html('Link Deleted..')
+    d3.select('.info .msg').classed('sendMsg', true)
 
-  setTimeout( function(){
-    d3.select('.info .msg').classed('sendMsg', false);
-  }, 1200)
-}
+    setTimeout( function(){
+      d3.select('.info .msg').classed('sendMsg', false);
+    }, 1200)
+  }
 }
 
 function textColorHighLight(){
@@ -255,7 +276,6 @@ function textColorHighLight(){
 function hexColorHighLight(){
   return '#0022ff';
 }
-
 
 function textColor(d){
   if( d.oblig == 'TRUE' ){ return "#fff"; }
@@ -267,8 +287,7 @@ function hexColor(d){
   if( d.oblig == 'TRUE' ){ return "rgba(252,179,26,0.9)"; }
   else if( d.level == 1 ){ return "#082b1a"; }
   else { return '#fff' }
- }
-
+}
 
 function drawHex(nodes) {
 
@@ -309,11 +328,9 @@ function drawHex(nodes) {
         })
 }
 
-
 function jitter(){
   return Math.random()*17;
 }
-
 
 // http://bl.ocks.org/mbostock/7555321
 // Wrap text labels - a bit modified
