@@ -2,7 +2,7 @@
 var margin = {top: 20, right: 100, bottom: 50, left: 100};
 
 var width = $(window).width() - margin.left - margin.right - 30,
-    height =  $(window).height() - 2*margin.top - 2*margin.bottom - 20;
+    height =  $(window).height() - 2*margin.top - 2*margin.bottom ;
 
 var svg;
 var data;
