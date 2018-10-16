@@ -101,7 +101,6 @@ function makeVis() {
   d3.selectAll('.event')
     .on('mouseup', function(){
         d3.select(this).classed('active', true);
-        // rr = d3.select(this);
         d3.select(this).moveToFront();
         d3.select(this).datum()['pos_x'] = 2.2;
         d3.select(this).datum()['pos_y'] = 1;
@@ -113,7 +112,7 @@ function makeVis() {
                     })
                     .select('circle')
                     .attr('fill','#fff')
-                    .attr('stroke','#aaa')
+                    .attr('stroke','#00bcd4')
 
       d3.selectAll('.event.active')
       .on('mouseup', function(){ interAct( d3.select(this), 'circle') } );
@@ -381,12 +380,12 @@ function drawCircl(evnts) {
       return 'translate('+ (dd(d.pos_x-0.3) + jitX )+','+ (ee(d.pos_y) + jitY)+')' 
     })
     .attr('fill', function(d){ 
-        return '#000' 
+        return '#00bcd4' 
     })
     .attr('stroke', function(d){
       return '#fff'
     })
-    .attr('stroke-width', 0.5)
+    .attr('stroke-width', 1.5)
     .classed('active',false)
 }
 
