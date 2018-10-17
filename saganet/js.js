@@ -271,11 +271,23 @@ function deleteConnection(b) {
     source = d3.select('.nodes').selectAll('.concept').filter( function(d) {
       return d.id == b.datum()['source']
     })
+    if( source.nodes().length == 0 ){
+      source = d3.select('.events').selectAll('.event').filter( function(d) {
+        return d.id == b.datum()['source']
+      })
+    }
+    console.log(source.nodes())
+
     source.datum()['connectedLinksCnt']--;
 
     target = d3.select('.nodes').selectAll('.concept').filter( function(d) {
       return d.id == b.datum()['target']
     })
+    if( target.nodes().length == 0 ){
+      source = d3.select('.events').selectAll('.event').filter( function(d) {
+        return d.id == b.datum()['target']
+      })
+    }
     target.datum()['connectedLinksCnt']--;
 
     updateScore({'source': source, "target": target}, true );
