@@ -66,7 +66,7 @@ function makeVis() {
         .enter().append('g')
         .attr('class','concept')
 
-  dataEvnts = data.filter(function(d){   return (d.Type == 'event' )  })
+  dataEvnts = data.filter(function(d){   return (d.Type == 'event')  })
   evnts = svg.select('.events').selectAll('.event')
         .data(dataEvnts)
         .enter().append('g')
@@ -133,7 +133,7 @@ function makeVis() {
         // check if link already exists
         p = { "source": selected[0].datum()["id"] , "target": selected[1].datum()["id"] , 'value': 0};
 
-        if ( getIndexofLinks(p) == -1 ) {
+        if ( getIndexofLinks(p) == -1  && (selected[0].datum()['id'] != selected[1].datum()['id'] ) ) {
           selected[0].datum()['connectedLinksCnt']++;
           selected[1].datum()['connectedLinksCnt']++;
           makeConnection(p);
@@ -155,26 +155,26 @@ function makeVis() {
 
 function makeConnection(p) {
   svg.select('g.links').append('line')
-      .attr('x1', dd(selected[0].datum()['pos_x']) + selected[0].datum()['jitt'].jitX)
-      .attr('y1', ee(selected[0].datum()['pos_y']) + selected[0].datum()['jitt'].jitY)
-      .attr('x2', dd(selected[1].datum()['pos_x']) + selected[1].datum()['jitt'].jitX)
-      .attr('y2', ee(selected[1].datum()['pos_y']) + selected[1].datum()['jitt'].jitY)
-      .attr('stroke','#000').attr('stroke-width',3.5)
-      .datum(p)
-      .on('mouseup', function(){
-        if( deleteable == false) {
-          d3.select(this).attr('stroke','#0022ff')
-          selectedLine = d3.select(this);
-          deleteable = true;
-          d3.select('#deleteBtn').classed('show',true)
+    .attr('x1', dd(selected[0].datum()['pos_x']) + selected[0].datum()['jitt'].jitX)
+    .attr('y1', ee(selected[0].datum()['pos_y']) + selected[0].datum()['jitt'].jitY)
+    .attr('x2', dd(selected[1].datum()['pos_x']) + selected[1].datum()['jitt'].jitX)
+    .attr('y2', ee(selected[1].datum()['pos_y']) + selected[1].datum()['jitt'].jitY)
+    .attr('stroke','#000').attr('stroke-width',3.5)
+    .datum(p)
+    .on('mouseup', function(){
+      if( deleteable == false) {
+        d3.select(this).attr('stroke','#0022ff')
+        selectedLine = d3.select(this);
+        deleteable = true;
+        d3.select('#deleteBtn').classed('show',true)
 
-        }else{
-          d3.select(this).attr('stroke','#000')
-          selectedLine = null;
-          deleteable = false;                
-          d3.select('#deleteBtn').classed('show',false)
-        }
-      })
+      }else{
+        d3.select(this).attr('stroke','#000')
+        selectedLine = null;
+        deleteable = false;                
+        d3.select('#deleteBtn').classed('show',false)
+      }
+  })
 }
 
 function saveConnection() {
